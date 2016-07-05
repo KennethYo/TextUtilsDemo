@@ -8,9 +8,12 @@ import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.util.LogPrinter;
+import android.view.View;
 import android.widget.TextView;
 
 import com.binaryfork.spanny.Spanny;
+
+import java.util.Locale;
 
 public class MethodActivity extends AppCompatActivity {
     private String TAG = "TextUtils";
@@ -33,6 +36,8 @@ public class MethodActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_method);
+
+        setTitle(MethodUtils.METHODS_NAME[getPosition()]);
 
         mTextView = (TextView) findViewById(R.id.text_view);
 
@@ -147,9 +152,59 @@ public class MethodActivity extends AppCompatActivity {
                 mOutputView.setText(String.valueOf(buffer));
                 break;
             case 9:
-
+                //根据传入的 local 获取当前的阅读习惯（例如，汉语习惯是左到右，希伯来语是右到左），具体可以看这篇文章，http://droidyue.com/blog/2014/07/07/support-rtl-in-android/index.html
+                int layoutDirectionFromLocale = TextUtils.getLayoutDirectionFromLocale(Locale.getDefault());
+                mOutputView.setText(layoutDirectionFromLocale == View.LAYOUT_DIRECTION_RTL ? "LAYOUT_DIRECTION_RTL" : "LAYOUT_DIRECTION_LTR");
+                break;
+            case 10:
+                //获取文本之后的偏移量 结合方法里的内容看比较容易,方法里面的Unicode都是我们所谓的非法字符
+                mTextView.setText(mWords1);
+                mTextView.append("\n\n");
+                mWords1 = mWords1.replace("很", "\uD800");
+                mWords1 = mWords1.replace("长", "\uDFFF");
+                mTextView.append(mWords1);
+                char[] chars = mWords1.toCharArray();
+                int offsetAfter = TextUtils.getOffsetAfter(mWords1, 5);
+                mOutputView.setText(String.valueOf(offsetAfter));
+                mOutputView.append("\n\n");
+                mOutputView.append(mWords1.substring(offsetAfter));
+                break;
+            case 11:
+                //获取文本之前的偏移量 结合方法里的内容看比较容易,方法里面的Unicode都是我们所谓的非法字符
+                mTextView.setText(mWords1);
+                mTextView.append("\n\n");
+                mWords1 = mWords1.replace("句", "\uD800");
+                mWords1 = mWords1.replace("话", "\uDFFF");
+                mTextView.setText(mWords1);
+                char[] chars1 = mWords1.toCharArray();
+                int offsetBefore = TextUtils.getOffsetBefore(mWords1, 5);
+                mOutputView.setText(String.valueOf(offsetBefore));
+                mOutputView.append("\n\n");
+                mOutputView.append(mWords1.substring(offsetBefore));
+                break;
+            case 12:
+                //翻转字符串
+                mTextView.setText(mWords1);
+                CharSequence reverse = TextUtils.getReverse(mWords1, 0, mWords1.length());
+                mOutputView.setText(reverse);
+                break;
+            case 13:
+                //trim 后的字符串长度
+                mWords1 = " " + mWords1 + " ";
+                mTextView.setText(mWords1);
+                mTextView.append("\n\n");
+                mTextView.append(String.valueOf(mWords1.length()));
+                int trimmedLength = TextUtils.getTrimmedLength(mWords1);
+                mOutputView.setText(String.valueOf(trimmedLength));
+                break;
+            case 14:
+                //encode html ，注意是 html 的哈
+                String code = "< > & \\ " + mWords1;
+                mTextView.setText(code);
+                mOutputView.setText(TextUtils.htmlEncode(code));
                 break;
         }
     }
+
 
 }
