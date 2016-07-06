@@ -13,10 +13,13 @@ import android.widget.TextView;
 
 import com.binaryfork.spanny.Spanny;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+
 public class MethodActivity extends AppCompatActivity {
-    private String TAG = "TextUtils";
+    private static final String TAG = "TextUtils";
 
     private TextView mTextView;
 
@@ -199,9 +202,99 @@ public class MethodActivity extends AppCompatActivity {
                 break;
             case 14:
                 //encode html ，注意是 html 的哈
-                String code = "< > & \\ " + mWords1;
+                String code = "<h1>html</h1> " + mWords1;
                 mTextView.setText(code);
                 mOutputView.setText(TextUtils.htmlEncode(code));
+                break;
+            case 15:
+                mTextView.setText(mWords1);
+                int indexOf = TextUtils.indexOf(mWords1, "不要的", 0, mWords1.length());
+                mOutputView.setText(String.valueOf(indexOf));
+                mOutputView.append(mWords1.substring(indexOf));
+                break;
+            case 16:
+                //判断是否仅有数字
+                mTextView.setText(mWords1);
+                String digits = "1234";
+                mTextView.append("\n\n");
+                mTextView.append(digits);
+                String digits1 = "123w123";
+                mTextView.append("\n\n");
+                mTextView.append(digits1);
+                boolean digitsOnly = TextUtils.isDigitsOnly(mWords1);
+                boolean digitsOnly1 = TextUtils.isDigitsOnly(digits);
+                boolean digitsOnly2 = TextUtils.isDigitsOnly(digits1);
+                mOutputView.setText(String.valueOf(digitsOnly));
+                mOutputView.append("\n\n");
+                mOutputView.append(String.valueOf(digitsOnly1));
+                mOutputView.append("\n\n");
+                mOutputView.append(String.valueOf(digitsOnly2));
+                break;
+            case 17:
+                //判空
+                mTextView.setText(mWords1);
+                String nullStr = null;
+                mTextView.append("\n\n");
+                mTextView.append(String.valueOf(nullStr));
+                mOutputView.setText(String.valueOf(TextUtils.isEmpty(mWords1)));
+                mOutputView.append("\n\n");
+                mOutputView.append(String.valueOf(TextUtils.isEmpty(nullStr)));
+                break;
+            case 18:
+                //判断是否有可以显示出来的
+                String graphic = "\n \t \b";
+                mTextView.setText(graphic);
+
+                mOutputView.setText(String.valueOf(TextUtils.isGraphic(graphic)));
+                break;
+
+            case 19:
+                //连接数组，例如：a b c d 输出 a-b-c-d
+                List<String> list = new ArrayList<>();
+                list.add("a");
+                list.add("b");
+                list.add("c");
+                list.add("d");
+                mTextView.setText(list.toString());
+                mOutputView.setText(TextUtils.join("-", list));
+                break;
+            case 20:
+                mTextView.setText(mWords1);
+                int c = TextUtils.lastIndexOf(mWords1, 'c');
+                mOutputView.setText(String.valueOf(c));
+                mOutputView.append("\n\n");
+                mOutputView.append(mWords1.substring(c));
+                break;
+            case 21:
+                //比对两个字符串 offset 到 len 的长度的字符串是否相同
+                mTextView.setText(mWords1);
+                mTextView.append("\n\n");
+                mTextView.append(mSpanny1);
+
+                mOutputView.setText(String.valueOf(TextUtils.regionMatches(mWords1, 2, mSpanny1, 2, 10)));
+                break;
+            case 22:
+                //替换功能，注意：只会替换第一个出现的。
+                mTextView.setText(mWords1);
+                mOutputView.setText(TextUtils.replace(mWords1,new String[]{"很长","的","."},new String[]{"very long","of","。"}));
+                break;
+            case 23:
+                //spilt
+                mTextView.setText(mWords2);
+                mOutputView.setText(TextUtils.join("--",TextUtils.split(mWords2,",")));
+                break;
+            case 24:
+                //如果是 String 返回 String ，spannedString 或 spanned 返回 spannedString
+                mTextView.setText(mSpanny1);
+                mOutputView.setText(TextUtils.stringOrSpannedString(mSpanny1));
+                break;
+            case 25:
+                //subStirng
+                mTextView.setText(mSpanny1);
+                mOutputView.setText(TextUtils.substring(mSpanny1,2,16));
+                break;
+            case 26:
+                mTextView.setText("一般用作序列化 CharSequence 子类");
                 break;
         }
     }
