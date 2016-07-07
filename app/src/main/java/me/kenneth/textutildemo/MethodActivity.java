@@ -124,7 +124,7 @@ public class MethodActivity extends AppCompatActivity {
                 mTextView.append("\n\n");
                 mTextView.append(mSpanny1);
 
-                mOutputView.setText(TextUtils.equals(mWords1, mSpanny1) + "");
+                mOutputView.setText(String.valueOf(TextUtils.equals(mWords1, mSpanny1)));
                 break;
             case 6:
                 //替换template当中的 ^1 ^2 等为values中相应的值，注意：不能超过9个。
